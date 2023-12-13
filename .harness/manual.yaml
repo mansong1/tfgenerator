@@ -1,0 +1,11 @@
+inputSet:
+  pipeline:
+    identifier: Build_tfgenerator_1702449248834
+    properties:
+      ci:
+        codebase:
+          build: ""
+  name: manual
+  identifier: manual
+  orgIdentifier: default
+  projectIdentifier: Onboarding
