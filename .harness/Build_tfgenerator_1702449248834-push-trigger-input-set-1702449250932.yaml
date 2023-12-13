@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_tfgenerator_1702449248834-push-trigger-input-set
+  identifier: Build_tfgenerator_1702449248834pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: Onboarding
+  pipeline:
+    identifier: Build_tfgenerator_1702449248834
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
