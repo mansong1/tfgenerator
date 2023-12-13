@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_tfgenerator_1702449248834-pr-trigger-input-set
+  identifier: Build_tfgenerator_1702449248834prtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: Onboarding
+  pipeline:
+    identifier: Build_tfgenerator_1702449248834
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>
