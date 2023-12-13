@@ -53,6 +53,11 @@ pipeline:
           runtime:
             type: Cloud
             spec: {}
+          caching:
+            enabled: true
+            paths: []
+          slsa_provenance:
+            enabled: false
         type: CI
         variables:
           - name: goBuildImage
@@ -60,3 +65,4 @@ pipeline:
             description: ""
             required: false
             value: golang:1.21.5
+        description: ""
