@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/zclconf/go-cty/cty"
@@ -24,12 +26,26 @@ type Project struct {
 	Source         string
 }
 
+// generateRandomHexColor generates a random hex color string
+func generateRandomHexColor() string {
+	source := rand.NewSource(time.Now().UnixNano())
+	random := rand.New(source)
+	return fmt.Sprintf("#%06x", random.Intn(16777215)) // 16777215 is FFFFFF in decimal
+}
+
 func main() {
 	// Retrieve values from environment variables
 	orgName := os.Getenv("PLUGIN_ORG_NAME")
 	projectName := os.Getenv("PLUGIN_PROJECT_NAME")
-	projectColor := os.Getenv("PLUGIN_PROJECT_COLOR") // TODO: Use random hex generator
-	orgID := strings.ToLower(orgName)                 // Assuming organization ID is set as an environment variable
+	projectColorEnv := os.Getenv("PLUGIN_PROJECT_COLOR")
+
+	var projectColor string
+	if projectColorEnv != "" {
+		projectColor = projectColorEnv
+	} else {
+		projectColor = generateRandomHexColor()
+	}
+	orgID := strings.ToLower(orgName) // Assuming organization ID is set as an environment variable
 
 	// Create Organization Module
 	organization := Organization{
