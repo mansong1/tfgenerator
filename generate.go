@@ -58,7 +58,7 @@ func main() {
 	rootBody := file.Body()
 
 	// Set up the organization block
-	organizationBlock := rootBody.AppendNewBlock("module", []string{"organization"})
+	organizationBlock := rootBody.AppendNewBlock("module", []string{"organization_" + orgID})
 	orgBody := organizationBlock.Body()
 	orgBody.SetAttributeValue("name", cty.StringVal(organization.Name))
 	orgBody.SetAttributeValue("source", cty.StringVal(organization.Source))
@@ -74,7 +74,7 @@ func main() {
 	}
 
 	// Set up the project block
-	projectBlock := rootBody.AppendNewBlock("module", []string{"project"})
+	projectBlock := rootBody.AppendNewBlock("module", []string{"project_" + projectName})
 	projectBody := projectBlock.Body()
 	projectBody.SetAttributeValue("name", cty.StringVal(project.Name))
 	projectBody.SetAttributeValue("organization_id", cty.StringVal(project.OrganizationID))
