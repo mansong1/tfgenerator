@@ -21,16 +21,19 @@ pipeline:
                   identifier: gobuild
                   name: go_build
                   spec:
+                    connectorRef: account.Dockerhub
+                    image: <+stage.variables.goBuildImage>
                     shell: Sh
-                    command: |-
-                      go version
-                      go build
+                    command: go build
                   timeout: ""
                   type: Run
               - step:
                   identifier: gotest
                   name: go_test
                   spec:
+                    connectorRef: account.Dockerhub
+                    image: <+stage.variables.goBuildImage>
+                    shell: Sh
                     command: go test -v ./...
                   timeout: ""
                   type: Run
@@ -51,3 +54,9 @@ pipeline:
             type: Cloud
             spec: {}
         type: CI
+        variables:
+          - name: goBuildImage
+            type: String
+            description: ""
+            required: false
+            value: golang:1.21.5
