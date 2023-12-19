@@ -77,7 +77,7 @@ func main() {
 	projectBlock := rootBody.AppendNewBlock("module", []string{"project_" + projectName})
 	projectBody := projectBlock.Body()
 	projectBody.SetAttributeValue("name", cty.StringVal(project.Name))
-	projectBody.SetAttributeValue("organization_id", cty.StringVal(project.OrganizationID))
+	projectBody.SetAttributeValue("organization_id", cty.StringVal("module.organization_"+orgID+"_details.id"))
 	projectBody.SetAttributeValue("color", cty.StringVal(project.Color))
 	projectBody.SetAttributeValue("source", cty.StringVal(project.Source))
 	// Add tags as needed
