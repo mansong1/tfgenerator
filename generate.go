@@ -69,7 +69,7 @@ func main() {
 		Name:           projectName,
 		OrganizationID: orgID,
 		Color:          projectColor,
-		Tags:           map[string]string{"bu": orgID, "app": "ApplicationA"},
+		Tags:           map[string]string{"bu": "module.organization_" + orgID + ".organization_details.id", "app": "ApplicationA"},
 		Source:         "harness-community/structure/harness//modules/projects",
 	}
 
@@ -77,7 +77,7 @@ func main() {
 	projectBlock := rootBody.AppendNewBlock("module", []string{"project_" + projectName})
 	projectBody := projectBlock.Body()
 	projectBody.SetAttributeValue("name", cty.StringVal(project.Name))
-	projectBody.SetAttributeValue("organization_id", cty.StringVal("module.organization_"+orgID+"_details.id"))
+	projectBody.SetAttributeValue("organization_id", cty.StringVal("module.organization_"+orgID+".organization_details.id"))
 	projectBody.SetAttributeValue("color", cty.StringVal(project.Color))
 	projectBody.SetAttributeValue("source", cty.StringVal(project.Source))
 	// Add tags as needed
