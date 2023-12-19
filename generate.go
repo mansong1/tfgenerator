@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -77,7 +78,17 @@ func main() {
 	projectBlock := rootBody.AppendNewBlock("module", []string{"project_" + projectName})
 	projectBody := projectBlock.Body()
 	projectBody.SetAttributeValue("name", cty.StringVal(project.Name))
-	projectBody.SetAttributeValue("organization_id", cty.StringVal("module.organization_"+orgID+".organization_details.id"))
+	projectBody.SetAttributeTraversal("organization_id", hcl.Traversal{
+		hcl.TraverseRoot{
+			Name: "module.organization_" + orgID,
+		},
+		hcl.TraverseAttr{
+			Name: "organization_details",
+		},
+		hcl.TraverseAttr{
+			Name: "id",
+		},
+	})
 	projectBody.SetAttributeValue("color", cty.StringVal(project.Color))
 	projectBody.SetAttributeValue("source", cty.StringVal(project.Source))
 	// Add tags as needed
