@@ -76,7 +76,7 @@ func main() {
 		Name:           projectName,
 		OrganizationID: orgID,
 		Color:          projectColor,
-		Tags:           map[string]string{"bu": "module.organization_" + orgID + ".organization_details.id", "app": "ApplicationA"},
+		Tags:           map[string]string{"bu": orgID, "app": "ApplicationA"},
 		Source:         "harness-community/structure/harness//modules/projects",
 	}
 
@@ -98,11 +98,12 @@ func main() {
 	projectBody.SetAttributeValue("color", cty.StringVal(project.Color))
 	projectBody.SetAttributeValue("source", cty.StringVal(project.Source))
 	// Add tags as needed
-	// projectTags := cty.MapVal(make(map[string]cty.Value))
-	// for key, value := range project.Tags {
-	// 	projectTags.AsValueMap()[key] = cty.StringVal(value)
-	// }
-	// projectBody.SetAttributeValue("tags", projectTags)
+	projectTagsMap := make(map[string]cty.Value)
+	for key, value := range project.Tags {
+		projectTagsMap[key] = cty.StringVal(value)
+	}
+	projectTags := cty.MapVal(projectTagsMap)
+	projectBody.SetAttributeValue("tags", projectTags)
 
 	// Write the file
 	tfFileName := "main_" + orgName + ".tf"
