@@ -63,7 +63,13 @@ func main() {
 	orgBody := organizationBlock.Body()
 	orgBody.SetAttributeValue("name", cty.StringVal(organization.Name))
 	orgBody.SetAttributeValue("source", cty.StringVal(organization.Source))
-	// Add tags as needed
+	//Add tags as needed
+	orgTagsMap := make(map[string]cty.Value)
+	for key, value := range organization.Tags {
+		orgTagsMap[key] = cty.StringVal(value)
+	}
+	orgTags := cty.MapVal(orgTagsMap)
+	orgBody.SetAttributeValue("tags", orgTags)
 
 	// Create the project module
 	project := Project{
@@ -92,6 +98,11 @@ func main() {
 	projectBody.SetAttributeValue("color", cty.StringVal(project.Color))
 	projectBody.SetAttributeValue("source", cty.StringVal(project.Source))
 	// Add tags as needed
+	// projectTags := cty.MapVal(make(map[string]cty.Value))
+	// for key, value := range project.Tags {
+	// 	projectTags.AsValueMap()[key] = cty.StringVal(value)
+	// }
+	// projectBody.SetAttributeValue("tags", projectTags)
 
 	// Write the file
 	tfFileName := "main_" + orgName + ".tf"
