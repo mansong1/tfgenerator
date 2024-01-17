@@ -37,6 +37,7 @@ func generateRandomHexColor() string {
 func main() {
 	// Retrieve values from environment variables
 	orgName := os.Getenv("PLUGIN_ORG_NAME")
+	githubRepo := os.Getenv("PLUGIN_GITHUB_REPO")
 	projectName := os.Getenv("PLUGIN_PROJECT_NAME")
 	projectColorEnv := os.Getenv("PLUGIN_PROJECT_COLOR")
 
@@ -104,6 +105,49 @@ func main() {
 	}
 	projectTags := cty.MapVal(projectTagsMap)
 	projectBody.SetAttributeValue("tags", projectTags)
+
+	// Create the project module
+	templatesBlock := rootBody.AppendNewBlock("module", []string{"hello_world_template_" + projectName})
+	templatesBody := templatesBlock.Body()
+	templatesBody.SetAttributeValue("source", cty.StringVal("harness-community/content/harness//modules/templates"))
+	templatesBody.SetAttributeValue("name", cty.StringVal("Welcome to Harness"))
+	templatesBody.SetAttributeTraversal("organization_id", hcl.Traversal{
+		hcl.TraverseRoot{
+			Name: "module.organization_" + orgID,
+		},
+		hcl.TraverseAttr{
+			Name: "organization_details",
+		},
+		hcl.TraverseAttr{
+			Name: "id",
+		},
+	})
+	templatesBody.SetAttributeTraversal("project_id", hcl.Traversal{
+		hcl.TraverseRoot{
+			Name: "module.project_" + projectName,
+		},
+		hcl.TraverseAttr{
+			Name: "project_details",
+		},
+		hcl.TraverseAttr{
+			Name: "id",
+		},
+	})
+
+	// Set up yaml_data with templatefile function
+	yamlData := fmt.Sprintf(`templatefile("${path.module}/templates/templates/welcome-to-harness.yaml", { REPOSITORY_NAME : "%s" })`, githubRepo)
+	templatesBody.SetAttributeValue("yaml_data", cty.StringVal(yamlData))
+
+	templatesBody.SetAttributeValue("template_version", cty.StringVal("v1.0.0"))
+	templatesBody.SetAttributeValue("type", cty.StringVal("Pipeline"))
+
+	// Add tags
+	templatesTagsMap := make(map[string]cty.Value)
+	for key, value := range project.Tags {
+		templatesTagsMap[key] = cty.StringVal(value)
+	}
+	templatesTags := cty.MapVal(templatesTagsMap)
+	templatesBody.SetAttributeValue("tags", templatesTags)
 
 	// Write the file
 	tfFileName := "main_" + orgName + ".tf"
